@@ -16,8 +16,10 @@ const Question: React.FC<QuestionProps> = ({
   };
 
   return (
-    <div>
-      <p>{questionText}</p>
+    <div className="question-container">
+      <p>
+        {index + 1}. {questionText}
+      </p>
       <label>
         <input
           type="radio"

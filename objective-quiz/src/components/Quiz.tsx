@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Question from "./Questions";
 import { QUESTIONS } from "../questions";
 
@@ -8,6 +8,18 @@ const Quiz: React.FC = () => {
   );
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const [score, setScore] = useState<number>(0);
+  const [averageScore, setAverageScore] = useState<number>(0);
+  const scores = JSON.parse(localStorage.getItem("scores") || "[]");
+
+  useEffect(() => {
+    if (scores.length > 0) {
+      const totalScore = scores.reduce(
+        (acc: number, curr: number) => acc + curr,
+        0
+      );
+      setAverageScore(totalScore / scores.length);
+    }
+  }, []);
 
   const handleAnswerChange = (index: number, value: boolean) => {
     const newAnswers = [...userAnswers];
@@ -16,16 +28,20 @@ const Quiz: React.FC = () => {
   };
 
   const handleSubmit = () => {
-    const score = userAnswers.filter((answer, index) => answer === true).length;
-    setScore(score);
+    const currentScore = userAnswers.filter(
+      (answer, index) => answer === true
+    ).length;
+    setScore(currentScore);
     setIsSubmitted(true);
+    localStorage.setItem("scores", JSON.stringify([...scores, currentScore]));
   };
   const handleRetry = () => {
     setUserAnswers(Array(QUESTIONS.length).fill(false));
   };
+  const calculatedScore = (100 * score) / QUESTIONS.length;
 
   return (
-    <div>
+    <div className="main">
       {QUESTIONS.map((q, index) => (
         <Question
           key={index}
@@ -34,12 +50,16 @@ const Quiz: React.FC = () => {
           handleAnswerChange={handleAnswerChange}
         />
       ))}
-      <button onClick={handleSubmit}>Submit</button>
-      {isSubmitted && (
-        <div>
-          Your score is: {score} / {QUESTIONS.length}
-        </div>
-      )}
+      <div className="output-container">
+        <button onClick={handleSubmit}>Submit</button>
+        {isSubmitted && (
+          <div>
+            <h3>Your score is: {calculatedScore}</h3>
+
+            <h3> Average : {averageScore}</h3>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
