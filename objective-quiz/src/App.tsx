@@ -4,7 +4,7 @@ import Quiz from "./components/Quiz";
 const App: React.FC = () => {
   return (
     <div className="App">
-      <h1>TODO</h1>
+      <h1 className="header">TODO</h1>
       <Quiz />
     </div>
   );
