@@ -4,17 +4,15 @@ interface QuestionProps {
   index: number;
   questionText: string;
   handleAnswerChange: (index: number, value: boolean) => void;
+  userAnswer: boolean | null;
 }
 
 const Question: React.FC<QuestionProps> = ({
   index,
   questionText,
   handleAnswerChange,
+  userAnswer,
 }) => {
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    handleAnswerChange(index, event.target.value === "yes");
-  };
-
   return (
     <div className="question-container">
       <p>
@@ -24,8 +22,8 @@ const Question: React.FC<QuestionProps> = ({
         <input
           type="radio"
           name={`question-${index}`}
-          value="yes"
-          onChange={handleChange}
+          checked={userAnswer === true}
+          onChange={() => handleAnswerChange(index, true)}
         />
         Yes
       </label>
@@ -33,8 +31,8 @@ const Question: React.FC<QuestionProps> = ({
         <input
           type="radio"
           name={`question-${index}`}
-          value="no"
-          onChange={handleChange}
+          checked={userAnswer === false}
+          onChange={() => handleAnswerChange(index, false)}
         />
         No
       </label>
